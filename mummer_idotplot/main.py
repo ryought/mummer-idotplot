@@ -10,7 +10,7 @@ def main():
     parser.add_argument('--querys', required=True, nargs='+', help='query seq id')
     args = parser.parse_args()
 
-    from mummer_interactive_dotplot import parse_mums, draw_map_plotly_multi
+    from .mummer_interactive_dotplot import parse_mums, draw_map_plotly_multi
     mum, single_ref = parse_mums(args.mum_filename)
     draw_map_plotly_multi(
             mum,

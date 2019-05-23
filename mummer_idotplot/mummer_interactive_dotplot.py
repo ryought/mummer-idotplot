@@ -57,7 +57,7 @@ def draw_map_plotly_multi(mums, refs, querys, single_ref, html=None):
                             x = align[1]
                             y = align[2]
                             length = align[3]
-                            data.append(go.Scattergl(x=[x,x+length], y=[y,y-length],
+                            data.append(go.Scattergl(x=[x,x+length], y=[y+length,y],
                                                      xaxis=refs_axes[i],
                                                      yaxis=querys_axes[j],
                                                      marker=dict(color='blue')))
