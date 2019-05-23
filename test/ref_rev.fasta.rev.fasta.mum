@@ -1,0 +1,7 @@
+> q
+  ref1         1         1        26
+  ref0        68         1        26
+  ref0         1         1        26
+> q Reverse
+  ref1        27         1        26
+  ref0       127         1        26

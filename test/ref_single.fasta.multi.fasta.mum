@@ -1,0 +1,14 @@
+> q1
+  ref        10         1        22
+> q1 Reverse
+  ref        24        18         4
+  ref        28        20         2
+> q2
+  ref        10         1        10
+  ref        22        13        10
+> q2 Reverse
+  ref        10        16         3
+  ref        15        13         2
+  ref        20        11         5
+  ref        24        18         4
+  ref        28        20         2
