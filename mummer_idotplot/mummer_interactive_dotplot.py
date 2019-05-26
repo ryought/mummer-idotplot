@@ -12,11 +12,15 @@ def parse_mums(filename):
         reader = csv.reader(f, delimiter=' ', skipinitialspace=True)
         for l in reader:
             if l[0] == '>':  # start flag
-                if l[-1] != 'Reverse':  # start line of match
+                length = int(' '.join(l[1:]).split('\t')[-1].split(' ')[-1])
+                name_with_flag = ''.join(' '.join(l[1:]).split('\t')[:-1])
+                L = name_with_flag.split(' ')
+                if L[-1] != 'Reverse':  # start line of match
                     if query_store:
                         ret.append(query_store)
                     query_store = {
-                        'query_name': ' '.join(l[1:]),
+                        'query_name': ' '.join(L),
+                        'length': length,
                         '+': [],
                         '-': []
                     }
@@ -43,6 +47,7 @@ def draw_map_plotly_multi(mums, refs, querys, single_ref, html=None):
         for j in range(len(querys)):
             for query_store in mums:
                 if query_store['query_name'] == querys[j]:
+                    query_length = query_store['length']
                     for align in query_store['+']:
                         if single_ref or align[0] == refs[i]:
                             x = align[1]
@@ -57,7 +62,7 @@ def draw_map_plotly_multi(mums, refs, querys, single_ref, html=None):
                             x = align[1]
                             y = align[2]
                             length = align[3]
-                            data.append(go.Scattergl(x=[x,x+length], y=[y+length,y],
+                            data.append(go.Scattergl(x=[x,x+length], y=[query_length-y,query_length-y-length],
                                                      xaxis=refs_axes[i],
                                                      yaxis=querys_axes[j],
                                                      marker=dict(color='blue')))
