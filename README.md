@@ -1,5 +1,5 @@
 # mummer-idotplot
-Generate interactive dotplot from mummer4 output using plotly
+Generate interactive dotplot from MUMmer4 output using plotly
 
 ## Installation
 ```
@@ -16,6 +16,6 @@ If you have `chr1, chr2` in `reference.fasta`, and `contig1, contig2` in `query.
 ```
 $ mummer -maxmatch -F -L -b -l 10 reference.fasta query.fasta > output.mum
 $ mummer-idotplot output.mum output.html --ref chr1 chr2 --query contig1 contig2
-$ open output.html
+$ open output.html  # you'll see dotplot in your browser
 ```
 

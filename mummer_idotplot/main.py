@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 def main():
-    print('development version')
     import argparse
     parser = argparse.ArgumentParser(description='mummer-idotplot: MUMmer4 Interactive Dotplot Generator')
     parser.add_argument('mum_filename', type=str, help='mummer4 output filename')
