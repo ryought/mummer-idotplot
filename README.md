@@ -16,6 +16,7 @@ If you have `chr1, chr2` in `reference.fasta`, and `contig1, contig2` in `query.
 ```
 $ mummer -maxmatch -F -L -b -l 10 reference.fasta query.fasta > output.mum
 $ mummer-idotplot output.mum output.html --ref chr1 chr2 --query contig1 contig2
+$ mummer-idotplot output.mum output.html --ref chr1:0:50000 chr2:100:20000 --query contig1 contig2  # you can specify the region to plot
 $ open output.html  # you'll see dotplot in your browser
 ```
 

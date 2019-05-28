@@ -39,6 +39,14 @@ def parse_mums(filename):
         ret.append(query_store)
     return ret, single_ref
 
+def is_in_region(xl, xr, bl, br):
+    cond = True
+    if bl:
+        cond = cond and bl <= xr
+    if br:
+        cond = cond and xl <= br
+    return cond
+
 def draw_map_plotly_multi(mums, refs, querys, single_ref, html=None):
     data = []
     refs_axes = ['x'+str(i+1) if i != 0 else 'x' for i in range(len(refs))]
@@ -46,26 +54,32 @@ def draw_map_plotly_multi(mums, refs, querys, single_ref, html=None):
     for i in range(len(refs)):
         for j in range(len(querys)):
             for query_store in mums:
-                if query_store['query_name'] == querys[j]:
+                if query_store['query_name'] == querys[j][0]:
                     query_length = query_store['length']
                     for align in query_store['+']:
-                        if single_ref or align[0] == refs[i]:
+                        if single_ref or align[0] == refs[i][0]:
                             x = align[1]
                             y = align[2]
                             length = align[3]
-                            data.append(go.Scattergl(x=[x,x+length], y=[y,y+length],
-                                                     xaxis=refs_axes[i],
-                                                     yaxis=querys_axes[j],
-                                                     marker=dict(color='red')))
+                            xl, xr = x, x + length
+                            yl, yr = y, y + length
+                            if is_in_region(xl, xr, refs[i][1], refs[i][2]) and is_in_region(yl, yr, querys[j][1], querys[j][2]):
+                                data.append(go.Scattergl(x=[xl, xr], y=[yl, yr],
+                                                         xaxis=refs_axes[i],
+                                                         yaxis=querys_axes[j],
+                                                         marker=dict(color='red')))
                     for align in query_store['-']:
-                        if single_ref or align[0] == refs[i]:
+                        if single_ref or align[0] == refs[i][0]:
                             x = align[1]
                             y = align[2]
                             length = align[3]
-                            data.append(go.Scattergl(x=[x,x+length], y=[query_length-y,query_length-y-length],
-                                                     xaxis=refs_axes[i],
-                                                     yaxis=querys_axes[j],
-                                                     marker=dict(color='blue')))
+                            xl, xr = x, x + length
+                            yl, yr = query_length - y, query_length - y - length
+                            if is_in_region(xl, xr, refs[i][1], refs[i][2]) and is_in_region(yr, yl, querys[j][1], querys[j][2]):
+                                data.append(go.Scattergl(x=[xl, xr], y=[yl, yr],
+                                                         xaxis=refs_axes[i],
+                                                         yaxis=querys_axes[j],
+                                                         marker=dict(color='blue')))
     # output
     option = dict(showlegend=False, barmode='stack')
     # references
@@ -73,7 +87,7 @@ def draw_map_plotly_multi(mums, refs, querys, single_ref, html=None):
     start, end = 0, pitch
     for i in range(len(refs)):
         option['xaxis' + str(i+1) if i != 0 else 'xaxis'] = dict(
-            title=refs[i], domain=[start, end], showspikes=True, spikemode='across'
+            title=refs[i][0], domain=[start, end], showspikes=True, spikemode='across'
         )
         start += pitch
         end += pitch
@@ -82,7 +96,7 @@ def draw_map_plotly_multi(mums, refs, querys, single_ref, html=None):
     start, end = 0, pitch
     for j in range(len(querys)):
         option['yaxis' + str(j+1) if j != 0 else 'yaxis'] = dict(
-            title=querys[j], domain=[start, end], showspikes=True, spikemode='across'
+            title=querys[j][0], domain=[start, end], showspikes=True, spikemode='across'
         )
         start += pitch
         end += pitch
