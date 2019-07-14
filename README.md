@@ -2,6 +2,7 @@
 Generate interactive dotplot from MUMmer4 output using plotly
 
 [![Downloads](https://pepy.tech/badge/mummer-idotplot)](https://pepy.tech/project/mummer-idotplot)
+[![PyPI version](https://badge.fury.io/py/mummer-idotplot.svg)](https://badge.fury.io/py/mummer-idotplot)
 
 ## Installation
 ```
