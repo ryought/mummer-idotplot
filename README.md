@@ -1,6 +1,8 @@
 # mummer-idotplot
 Generate interactive dotplot from MUMmer4 output using plotly
 
+[![Downloads](https://pepy.tech/badge/mummer-idotplot)](https://pepy.tech/project/mummer-idotplot)
+
 ## Installation
 ```
 $ pip install mummer-idotplot
