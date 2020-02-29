@@ -4,6 +4,9 @@ import csv
 import plotly.offline as offline
 import plotly.graph_objs as go
 
+import matplotlib.pyplot as plt
+import matplotlib.collections as mc
+
 def parse_mums(filename):
     ret = []
     query_store = None
@@ -46,6 +49,44 @@ def is_in_region(xl, xr, bl, br):
     if br:
         cond = cond and xl <= br
     return cond
+
+def draw_map_matplotlib(ax, mums, ref, query, single_ref):
+    lines_f, lines_b = [], []
+    for query_store in mums:
+        if query_store['query_name'] == query[0]:
+            query_length = query_store['length']
+            for align in query_store['+']:
+                if single_ref or align[0] == ref[0]:
+                    x = align[1]
+                    y = align[2]
+                    length = align[3]
+                    xl, xr = x, x + length
+                    yl, yr = y, y + length
+                    if is_in_region(xl, xr, ref[1], ref[2]) and is_in_region(yl, yr, query[1], query[2]):
+                        lines_f.append(((xl, yl), (xr, yr)))
+            for align in query_store['-']:
+                if single_ref or align[0] == ref[0]:
+                    x = align[1]
+                    y = align[2]
+                    length = align[3]
+                    xl, xr = x, x + length
+                    yl, yr = query_length - y, query_length - y - length
+                    if is_in_region(xl, xr, ref[1], ref[2]) and is_in_region(yr, yl, query[1], query[2]):
+                        lines_b.append(((xl, yl), (xr, yr)))
+    lc_f = mc.LineCollection(lines_f, color='red', linewidths=1)
+    lc_b = mc.LineCollection(lines_b, color='blue', linewidths=1)
+    ax.add_collection(lc_f)
+    ax.add_collection(lc_b)
+    ax.set_xlabel(ref[0])
+    ax.set_ylabel(query[0])
+    ax.ticklabel_format(style='sci',axis='both',scilimits=(0,0))
+    if (ref[1] is None or ref[2] is None or query[1] is None or query[2] is None):
+        ax.autoscale()
+    else:
+        ax.set_xlim(ref[1], ref[2])
+        ax.set_ylim(query[1], query[2])
+    ax.grid(which='major')
+    ax.set_aspect('equal')
 
 def draw_map_plotly_multi(mums, refs, querys, single_ref, html=None):
     data = []
